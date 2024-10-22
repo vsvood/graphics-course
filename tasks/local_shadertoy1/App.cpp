@@ -4,6 +4,7 @@
 #include <etna/GlobalContext.hpp>
 #include <etna/PipelineManager.hpp>
 
+
 App::App()
   : resolution{1280, 720}
   , useVsync{true}
@@ -73,9 +74,6 @@ App::App()
   commandManager = etna::get_context().createPerFrameCmdMgr();
 
 
-
-  
-
   // TODO: Initialize any additional resources you require here!
   context = &etna::get_context();
 
@@ -137,7 +135,7 @@ void App::drawFrame()
         currentCmdBuf,
         backbuffer,
         // We are going to use the texture at the transfer stage...
-        vk::PipelineStageFlagBits2::eTransfer, 
+        vk::PipelineStageFlagBits2::eTransfer,
         // ...to transfer-write stuff into it...
         vk::AccessFlagBits2::eTransferWrite,
         // ...and want it to have the appropriate layout.
@@ -152,6 +150,7 @@ void App::drawFrame()
 
 
       // TODO: Record your commands here!
+
 
       // At the end of "rendering", we are required to change how the pixels of the
       // swpchain image are laid out in memory to something that is appropriate
