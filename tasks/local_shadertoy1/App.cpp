@@ -165,6 +165,17 @@ void App::drawFrame()
         vk::ImageAspectFlagBits::eColor);
       etna::flush_barriers(currentCmdBuf);
 
+      // vk::MemoryBarrier memoryBarrier;
+      // memoryBarrier.srcAccessMask = vk::AccessFlagBits::eShaderWrite;
+      // memoryBarrier.dstAccessMask = vk::AccessFlagBits::eShaderRead;
+      // currentCmdBuf.pipelineBarrier(
+      //     vk::PipelineStageFlagBits::eComputeShader,
+      //     vk::PipelineStageFlagBits::eTransfer,
+      //     vk::DependencyFlags(),
+      //     1, &memoryBarrier,
+      //     0, nullptr,
+      //     0, nullptr);
+
       auto set = etna::create_descriptor_set(
         etna::get_shader_program("local_shadertoy1").getDescriptorLayoutId(0),
         currentCmdBuf,
@@ -181,6 +192,19 @@ void App::drawFrame()
       uint32_t groupCountY = (resolution.y + 31) / 32;
 
       currentCmdBuf.dispatch(groupCountX, groupCountY, 1);
+
+      etna::set_state(
+        currentCmdBuf,
+        image.get(),
+        // We are going to use the texture at the transfer stage...
+        vk::PipelineStageFlagBits2::eTransfer,
+        // ...to transfer-write stuff into it...
+        vk::AccessFlagBits2::eTransferRead,
+        // ...and want it to have the appropriate layout.
+        vk::ImageLayout::eTransferSrcOptimal,
+        vk::ImageAspectFlagBits::eColor);
+
+      etna::flush_barriers(currentCmdBuf);
 
       vk::ImageBlit blitRegion{
           .srcSubresource = {vk::ImageAspectFlagBits::eColor, 0, 0, 1},
