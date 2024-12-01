@@ -146,7 +146,6 @@ void App::drawFrame()
       // As with set_state, Etna sometimes flushes on it's own.
       // Usually, flushes should be placed before "action", i.e. compute dispatches
       // and blit/copy operations.
-      etna::flush_barriers(currentCmdBuf);
 
 
       // TODO: Record your commands here!
@@ -155,26 +154,6 @@ void App::drawFrame()
       // At the end of "rendering", we are required to change how the pixels of the
       // swpchain image are laid out in memory to something that is appropriate
       // for presenting to the window (while preserving the content of the pixels!).
-      etna::set_state(
-        currentCmdBuf,
-        image.get(),
-        // This looks weird, but is correct. Ask about it later.
-        vk::PipelineStageFlagBits2::eComputeShader,
-        vk::AccessFlagBits2::eShaderWrite,
-        vk::ImageLayout::eGeneral, //eTransferSrcOptimal
-        vk::ImageAspectFlagBits::eColor);
-      etna::flush_barriers(currentCmdBuf);
-
-      // vk::MemoryBarrier memoryBarrier;
-      // memoryBarrier.srcAccessMask = vk::AccessFlagBits::eShaderWrite;
-      // memoryBarrier.dstAccessMask = vk::AccessFlagBits::eShaderRead;
-      // currentCmdBuf.pipelineBarrier(
-      //     vk::PipelineStageFlagBits::eComputeShader,
-      //     vk::PipelineStageFlagBits::eTransfer,
-      //     vk::DependencyFlags(),
-      //     1, &memoryBarrier,
-      //     0, nullptr,
-      //     0, nullptr);
 
       auto set = etna::create_descriptor_set(
         etna::get_shader_program("local_shadertoy1").getDescriptorLayoutId(0),
@@ -187,6 +166,7 @@ void App::drawFrame()
 
       currentCmdBuf.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline.getVkPipeline());
       currentCmdBuf.bindDescriptorSets(vk::PipelineBindPoint::eCompute, pipeline.getVkPipelineLayout(), 0, 1, &vkSet, 0, nullptr);
+      etna::flush_barriers(currentCmdBuf);
 
       uint32_t groupCountX = (resolution.x + 31) / 32;
       uint32_t groupCountY = (resolution.y + 31) / 32;
