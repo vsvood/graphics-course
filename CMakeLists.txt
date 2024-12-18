@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.30)
 
 project(graphics_course CXX)
 
+# add_compile_options(-Wno-stringop-overflow)
+
 # Prevent the user from polluting the root directory with build files
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(
@@ -27,6 +29,7 @@ endif()
 
 # Uncomment to contribute to etna
 # set(CPM_etna_SOURCE "${PROJECT_SOURCE_DIR}/../etna")
+add_definitions(-DTRACY_ENABLE)
 
 include("cmake/thirdparty.cmake")
 include("cmake/shaders.cmake")
