@@ -81,11 +81,13 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float n = 64.0;
     
     vec2 uv = fragCoord.xy / UniParams.resolution.xy;
+    vec2 mouse = UniParams.mousePos.xy / UniParams.resolution.xy;
+    mouse = mouse * 2.0 - 1.0;
     uv = uv * 2.0 - 1.0;
     uv.x *= UniParams.resolution.x / UniParams.resolution.y;
     vec3 col = vec3(0.0);
     vec3 ro = vec3(0.0, 0.0, 6.0);
-    vec3 rd = normalize(vec3(uv, -1.0));
+    vec3 rd = normalize(vec3(uv + mouse, -1.0));
     float t = 0.0;
     for (int i = 0; i < 64; i++)
     {

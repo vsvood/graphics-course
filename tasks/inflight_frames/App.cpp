@@ -10,7 +10,6 @@
 #include <tracy/Tracy.hpp>
 
 #include <etna/Profiling.hpp>
-#include <iostream>
 
 
 App::App()
@@ -149,21 +148,9 @@ void App::drawFrame()
   }
 }
 
-void App::rotateCam(const Mouse& ms) {
-  cam.move({ms.capturedPosDelta.x, ms.capturedPosDelta.y, ms.scrollDelta.y});
-}
-
 void 
 App::processInput() 
 {
-  if (osWindow->mouse[MouseButton::mbRight] == ButtonState::Rising)
-    osWindow->captureMouse = !osWindow->captureMouse;
 
-  if (osWindow->captureMouse) {
-    rotateCam(osWindow->mouse);
-  }
-
-  std::cerr << cam.position.x << " " << cam.position.y << " " << cam.position.z << std::endl;
-  cam.position.y += 0.01f;
-  renderer.update(cam.position);
+  renderer.update(glm::vec2{osWindow->mouse.freePos.x, osWindow->mouse.freePos.y});
 }

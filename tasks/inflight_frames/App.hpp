@@ -43,7 +43,7 @@ private:
   std::unique_ptr<etna::Window> vkWindow;
   std::unique_ptr<etna::PerFrameCmdMgr> commandManager;
 
-  std::chrono::system_clock::time_point timeStart;
+  std::chrono::high_resolution_clock::time_point timeStart;
 
   Camera cam;
 };

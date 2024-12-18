@@ -175,7 +175,6 @@ Renderer::render( vk::CommandBuffer cmd_buf,
                         }
                     }
                 },
-                //FIXME: Unhardcode
                 etna::Binding{1, textures[0].genBinding(defaultSampler.get(), vk::ImageLayout::eShaderReadOnlyOptimal)},
                 etna::Binding{2, constants[nFrame % NUM_FRAMES_IN_FLIGHT].genBinding()},
             });
@@ -203,6 +202,7 @@ Renderer::render( vk::CommandBuffer cmd_buf,
         
         cmd_buf.draw(3, 1, 0, 0);        
     }
+    ++ nFrame;
 }
 
 void
@@ -283,10 +283,10 @@ Renderer::loadResource(etna::OneShotCmdMgr& cmd_mgr, const char* name)
 }
 
 void 
-Renderer::update(glm::vec3 view) {
+Renderer::update(glm::vec2 mouse) {
     ZoneScoped;
     params.resolution = resolution;
-    params.cam_view = view;
+    params.mousePos = mouse;
 
     std::memcpy(constants[nFrame % NUM_FRAMES_IN_FLIGHT].data(), &params, sizeof(params));
 }

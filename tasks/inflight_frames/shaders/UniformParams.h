@@ -7,7 +7,7 @@
 struct UniformParams
 {
   shader_vec2 resolution;
-  shader_vec3 cam_view;
+  shader_vec2 mousePos;
 };
 
 
